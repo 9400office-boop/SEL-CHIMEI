@@ -3,11 +3,17 @@ import { abilitiesData } from '../data'
 
 // AbilityCard — 內嵌
 function AbilityCard({ ability }) {
-  const [showSkills, setShowSkills] = useState(false)
-  const [showReflections, setShowReflections] = useState(false)
+  const [expandedSections, setExpandedSections] = useState({})
+
+  const toggleSection = (sectionLabel) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionLabel]: !prev[sectionLabel]
+    }))
+  }
 
   return (
-    <div className={`card-base border ${ability.borderColor} overflow-hidden`}>
+    <div className={`card-base border ${ability.borderColor} flex flex-col h-full`}>
       <div className={`${ability.bgColor} px-6 py-5`}>
         <div className="flex items-start gap-4">
           <div className={`w-12 h-12 ${ability.iconBg} rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 shadow-sm`}>
@@ -23,41 +29,52 @@ function AbilityCard({ ability }) {
         </div>
       </div>
 
-      <div className="px-6 pb-5 pt-4 space-y-3">
+      <div className="px-6 pb-5 pt-4 space-y-3 flex-1 flex flex-col overflow-hidden">
         {[
-          { label: '學習技巧', icon: '📌', show: showSkills,       setShow: setShowSkills,       items: ability.skills,       renderItem: (s, i) => <span>{s}</span> },
-          { label: '反思練習', icon: '💭', show: showReflections,  setShow: setShowReflections,  items: ability.reflections,  renderItem: (q) => <span className="italic">{q}</span> },
-        ].map(({ label, icon, show, setShow, items, renderItem }) => (
-          <div key={label} className="border border-gray-100 rounded-xl overflow-hidden">
-            <button onClick={() => setShow(!show)}
-              className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-sm font-medium text-warm-text">
-              <span className="flex items-center gap-2"><span>{icon}</span><span>{label}</span></span>
-              <span className={`text-sub-text transition-transform duration-200 ${show ? 'rotate-180' : ''}`}>▼</span>
-            </button>
-            {show && (
-              <div className="px-4 py-3 bg-white">
-                <ul className="space-y-2">
-                  {items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-sub-text">
-                      <span className={label === '學習技巧'
-                        ? `w-5 h-5 rounded-full ${ability.tagBg} ${ability.tagText} text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-semibold`
-                        : 'text-muted-orange mt-0.5'}>
-                        {label === '學習技巧' ? i + 1 : '›'}
-                      </span>
-                      {renderItem(item, i)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
+          { label: '學習技巧', icon: '📌', items: ability.skills,       renderItem: (s, i) => <span>{s}</span> },
+          { label: '反思練習', icon: '💭', items: ability.reflections,  renderItem: (q) => <span className="italic">{q}</span> },
+        ].map(({ label, icon, items, renderItem }) => {
+          const isExpanded = expandedSections[`${ability.id}-${label}`] || false
+          const itemCount = items.length
+          
+          return (
+            <div 
+              key={label} 
+              className="border border-gray-100 rounded-xl overflow-hidden flex flex-col min-h-0"
+              style={{
+                minHeight: isExpanded ? `${48 + itemCount * 28 + 24}px` : '48px'
+              }}
+            >
+              <button onClick={() => toggleSection(`${ability.id}-${label}`)}
+                className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-sm font-medium text-warm-text flex-shrink-0">
+                <span className="flex items-center gap-2"><span>{icon}</span><span>{label}</span></span>
+                <span className={`text-sub-text transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>▼</span>
+              </button>
+              {isExpanded && (
+                <div className="px-4 py-3 bg-white overflow-hidden">
+                  <ul className="space-y-2">
+                    {items.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-sub-text">
+                        <span className={label === '學習技巧'
+                          ? `w-5 h-5 rounded-full ${ability.tagBg} ${ability.tagText} text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-semibold`
+                          : 'text-muted-orange mt-0.5'}>
+                          {label === '學習技巧' ? i + 1 : '›'}
+                        </span>
+                        {renderItem(item, i)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
 }
 
-// ── 五大能力頁 ────────────────────────────────────────────────────────────────
+// ── 五大能力頁 ────────────────────────────────────────────────────────
 export default function AbilitiesPage({ navigate }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
@@ -72,7 +89,7 @@ export default function AbilitiesPage({ navigate }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-12 items-start">
         {abilitiesData.map((ability) => (
           <AbilityCard key={ability.id} ability={ability} />
         ))}
