@@ -13,7 +13,7 @@ function HeroSection({ navigate }) {
           <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 bg-white/80 border border-amber-200 text-muted-orange text-sm font-medium px-4 py-1.5 rounded-full mb-6 shadow-sm">
               <span>🌸</span>
-              <span>奇美醫療 SEL 學習小棧</span>
+              <span>奇美醫院 SEL 學習小棧</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-warm-text leading-tight mb-5">
