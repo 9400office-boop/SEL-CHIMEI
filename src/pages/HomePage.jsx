@@ -79,13 +79,14 @@ function HeroSection({ navigate }) {
                     <stop offset="50%" stopColor="#E8610A" />
                     <stop offset="100%" stopColor="#F4A261" />
                   </linearGradient>
-                  <path id="selLetterArc"   d="M 58,240  A 152,152 0 0,0 322,240" />
-                  <path id="selSubtitleArc" d="M 58,295  A 152,152 0 0,0 322,295" />
+                  <path id="selLetterArc"   d="M 58,264  A 152,152 0 0,0 322,264" />
+                  <path id="selSubtitleArc" d="M 91,320  A 114,114 0 0,0 289,320" />
                 </defs>
                 <path d="M 44,270 A 165,165 0 0,0 336,270" fill="none" stroke="rgba(255,252,245,0.93)" strokeWidth="88" strokeLinecap="round" />
                 <path d="M 44,270 A 165,165 0 0,0 336,270" fill="none" stroke="rgba(244,162,97,0.45)" strokeWidth="1.5" />
                 <circle cx="44"  cy="270" r="5" fill="#F4A261" opacity="0.8" />
                 <circle cx="336" cy="270" r="5" fill="#F4A261" opacity="0.8" />
+                <rect x="55" y="245" width="270" height="38" rx="8" fill="#FDF8F0" opacity="0.95" />
                 <text fontSize="36" fontWeight="900" fontFamily="Arial Black, Impact, sans-serif" fill="url(#selArcGrad)" letterSpacing="18" style={{ filter: 'drop-shadow(0px 1px 3px rgba(232,97,10,0.3))' }}>
                   <textPath href="#selLetterArc" startOffset="50%" textAnchor="middle">S · E · L</textPath>
                 </text>
@@ -163,7 +164,7 @@ export default function HomePage({ navigate }) {
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-warm-text mb-3">什麼是 SEL？</h2>
             <p className="text-sub-text text-base max-w-xl mx-auto leading-relaxed">
-              社會情緒學習是幫助我們<strong className="text-warm-text">認識自己、理解他人、做出負責任決定</strong>的學習方式，
+              社會情緒學習是幫助我們<strong className="text-warm-text">認識自己、理解他人、   出負責任決定</strong>的學習方式，
               讓醫療工作者在高壓環境中仍能保有溫度與穩定。
             </p>
           </div>
