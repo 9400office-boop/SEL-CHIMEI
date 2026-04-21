@@ -1,10 +1,40 @@
-import ScenarioCategoryCard from '../components/ScenarioCategoryCard'
 import { scenarioCategories } from '../data'
 
+// ScenarioCategoryCard — 內嵌
+function ScenarioCategoryCard({ category, navigate }) {
+  const isOpen = category.status === 'open'
+  return (
+    <div className={`card-base border ${category.borderColor} overflow-hidden ${isOpen ? 'card-hover cursor-pointer' : 'opacity-80'}`}>
+      <div className={`h-2 ${category.accentColor}`} />
+      <div className="p-6">
+        <div className="flex items-start gap-4 mb-4">
+          <div className={`w-14 h-14 ${category.bgColor} rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 shadow-sm`}>
+            {category.emoji}
+          </div>
+          <div>
+            <h3 className="font-bold text-warm-text text-lg leading-tight">{category.name}</h3>
+            <span className="text-sub-text text-xs">{category.englishName}</span>
+          </div>
+        </div>
+        <p className="text-sub-text text-sm leading-relaxed mb-5">{category.description}</p>
+        {isOpen ? (
+          <button onClick={() => navigate(category.targetPage)} className="btn-primary w-full text-sm">
+            {category.buttonLabel}
+          </button>
+        ) : (
+          <button disabled className="w-full py-2.5 px-6 rounded-full text-sm font-medium bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200">
+            {category.buttonLabel}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── 情境應用頁 ────────────────────────────────────────────────────────────────
 export default function ScenarioPage({ navigate }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-      {/* Header */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 bg-sky-50 border border-sky-200 text-sky-600 text-sm font-medium px-4 py-1.5 rounded-full mb-4">
           🎭 情境應用
@@ -16,14 +46,12 @@ export default function ScenarioPage({ navigate }) {
         </p>
       </div>
 
-      {/* Category cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {scenarioCategories.map((cat) => (
           <ScenarioCategoryCard key={cat.id} category={cat} navigate={navigate} />
         ))}
       </div>
 
-      {/* Info section */}
       <div className="bg-gradient-to-br from-sky-50 to-teal-50 rounded-3xl border border-sky-100 p-6 sm:p-8 text-center">
         <div className="text-3xl mb-3">💡</div>
         <h3 className="font-bold text-warm-text text-lg mb-2">測驗怎麼設計的？</h3>
@@ -33,17 +61,13 @@ export default function ScenarioPage({ navigate }) {
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {['自我覺察', '自我管理', '社會覺察', '人際技巧', '負責任的決策'].map((a) => (
-            <span key={a} className="bg-white border border-sky-100 text-sky-700 text-xs px-3 py-1 rounded-full font-medium">
-              {a}
-            </span>
+            <span key={a} className="bg-white border border-sky-100 text-sky-700 text-xs px-3 py-1 rounded-full font-medium">{a}</span>
           ))}
         </div>
       </div>
 
       <div className="flex justify-center mt-8">
-        <button onClick={() => navigate('abilities')} className="btn-outline">
-          先了解 SEL 五大能力
-        </button>
+        <button onClick={() => navigate('abilities')} className="btn-outline">先了解 SEL 五大能力</button>
       </div>
     </div>
   )

@@ -1,10 +1,66 @@
-import AbilityCard from '../components/AbilityCard'
+import { useState } from 'react'
 import { abilitiesData } from '../data'
 
+// AbilityCard — 內嵌
+function AbilityCard({ ability }) {
+  const [showSkills, setShowSkills] = useState(false)
+  const [showReflections, setShowReflections] = useState(false)
+
+  return (
+    <div className={`card-base border ${ability.borderColor} overflow-hidden`}>
+      <div className={`${ability.bgColor} px-6 py-5`}>
+        <div className="flex items-start gap-4">
+          <div className={`w-12 h-12 ${ability.iconBg} rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 shadow-sm`}>
+            {ability.emoji}
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <h3 className="font-bold text-warm-text text-lg">{ability.name}</h3>
+              <span className={`ability-tag ${ability.tagBg} ${ability.tagText} text-xs`}>{ability.englishName}</span>
+            </div>
+            <p className="text-sub-text text-sm leading-relaxed">{ability.definition}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-6 pb-5 pt-4 space-y-3">
+        {[
+          { label: '學習技巧', icon: '📌', show: showSkills,       setShow: setShowSkills,       items: ability.skills,       renderItem: (s, i) => <span>{s}</span> },
+          { label: '反思練習', icon: '💭', show: showReflections,  setShow: setShowReflections,  items: ability.reflections,  renderItem: (q) => <span className="italic">{q}</span> },
+        ].map(({ label, icon, show, setShow, items, renderItem }) => (
+          <div key={label} className="border border-gray-100 rounded-xl overflow-hidden">
+            <button onClick={() => setShow(!show)}
+              className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-sm font-medium text-warm-text">
+              <span className="flex items-center gap-2"><span>{icon}</span><span>{label}</span></span>
+              <span className={`text-sub-text transition-transform duration-200 ${show ? 'rotate-180' : ''}`}>▼</span>
+            </button>
+            {show && (
+              <div className="px-4 py-3 bg-white">
+                <ul className="space-y-2">
+                  {items.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-sub-text">
+                      <span className={label === '學習技巧'
+                        ? `w-5 h-5 rounded-full ${ability.tagBg} ${ability.tagText} text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-semibold`
+                        : 'text-muted-orange mt-0.5'}>
+                        {label === '學習技巧' ? i + 1 : '›'}
+                      </span>
+                      {renderItem(item, i)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── 五大能力頁 ────────────────────────────────────────────────────────────────
 export default function AbilitiesPage({ navigate }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-      {/* Header */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 bg-pink-50 border border-pink-200 text-pink-600 text-sm font-medium px-4 py-1.5 rounded-full mb-4">
           ✨ SEL 五大能力
@@ -16,31 +72,21 @@ export default function AbilitiesPage({ navigate }) {
         </p>
       </div>
 
-      {/* Ability cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-12">
         {abilitiesData.map((ability) => (
           <AbilityCard key={ability.id} ability={ability} />
         ))}
       </div>
 
-      {/* SEL 引導橫幅 */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-50 via-[#f0faf8] to-amber-50 border border-sky-100 mb-10">
-        {/* 背景裝飾 */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-sky-100/60 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
         <div className="relative flex flex-col md:flex-row items-center gap-8 p-7 sm:p-10">
-          {/* 左：SEL 圓餅圖 */}
           <div className="flex-shrink-0 relative">
             <div className="absolute inset-0 bg-white/60 rounded-full blur-xl scale-110" />
-            <img
-              src="/sel-wheel.png"
-              alt="SEL 五大能力"
-              className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full object-cover shadow-lg border-4 border-white"
-            />
+            <img src="/sel-wheel.png" alt="SEL 五大能力" className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full object-cover shadow-lg border-4 border-white" />
           </div>
-
-          {/* 右：引導文字 */}
           <div className="flex-1 text-center md:text-left">
             <div className="inline-flex items-center gap-2 bg-white/80 border border-teal-200 text-teal-600 text-xs font-semibold px-3 py-1 rounded-full mb-3">
               🌀 五大能力，相互支撐
@@ -54,12 +100,8 @@ export default function AbilitiesPage({ navigate }) {
               <br /><span className="text-warm-text font-medium">五種能力，在每一次的醫療互動中都可以練習。</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-              <button onClick={() => navigate('selfcheck')} className="btn-outline text-sm">
-                🌡️ 先做今日自我檢測
-              </button>
-              <button onClick={() => navigate('scenario')} className="btn-primary text-sm">
-                🎭 前往情境練習 →
-              </button>
+              <button onClick={() => navigate('selfcheck')} className="btn-outline text-sm">🌡️ 先做今日自我檢測</button>
+              <button onClick={() => navigate('scenario')} className="btn-primary text-sm">🎭 前往情境練習 →</button>
             </div>
           </div>
         </div>
